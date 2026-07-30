@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,14 +27,11 @@ public class BearAttack : MonoBehaviour {
     }
 
     public void Attack(InputAction.CallbackContext callbackContext) {
-        Debug.Log("Try attack");
-        
         // Check cooldown
         if (currentCooldown >  0f) {
             return;
         }
-        
-        Debug.Log("Cooldown inactive");
+        Debug.Log("Looking for opponents");
         
         // Iterate through every opponent
         for(int i = 0; i < _opponents.Count; i++) {
@@ -46,6 +41,8 @@ public class BearAttack : MonoBehaviour {
             // If in range damage opponent
             if (distance <= _range) {
                 // TODO Damage opponent
+                OpponentRework opponentRework = opponent.GetComponent<OpponentRework>();
+                opponentRework.SubtractHp(_damage);
                 Debug.Log("Damage opponent");
             }
         }
