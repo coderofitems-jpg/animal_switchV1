@@ -45,7 +45,7 @@ public class BearAttack : MonoBehaviour {
             
             // If in range damage opponent
             if (distance <= _range) {
-                // Damage opponent
+                // TODO Damage opponent
                 Debug.Log("Damage opponent");
             }
         }

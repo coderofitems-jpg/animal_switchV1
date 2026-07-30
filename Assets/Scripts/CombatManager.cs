@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class CombatManager { 
+public class CombatManager : MonoBehaviour {
     
     [Header("Combat")] 
     [SerializeField] private float _maxHp = 100f;
@@ -18,7 +18,11 @@ public class CombatManager {
         _maxHp = value;
     }
     
-    public void SetCurrentHp(float value) {
-        currentHp = value;
+    public void AddHp(float hp) {
+        Debug.Log("Adding hp");
+        currentHp += hp;
+        if (currentHp > _maxHp) {
+            currentHp = _maxHp;
+        }
     }
 }
