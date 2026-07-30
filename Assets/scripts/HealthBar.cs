@@ -43,6 +43,10 @@ public class HealthBar : MonoBehaviour
 
     // Null guards matter here: with [ExecuteAlways] this also runs in the editor,
     // where the references can be unassigned while the bar is being set up.
+    //
+    // Nur die Farbe: den Fuellstand treibt der Slider selbst. Weil das Fill-Image
+    // auf Type.Filled steht, setzt Slider.UpdateVisuals dessen fillAmount statt die
+    // Anker zu skalieren - genau deshalb behalten die Enden ihre Form.
     void ApplyGradient()
     {
         if (fill == null || slider == null || gradient == null)

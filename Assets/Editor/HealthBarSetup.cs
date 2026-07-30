@@ -13,6 +13,15 @@ public static class HealthBarSetup
     const float BarWidth = 220f;
     const float BarHeight = 26f;
 
+    const string FrameSpritePath = "Assets/HP Leiste.png";
+    const string FillSpritePath = "Assets/HP Leiste Fill.png";
+
+    // Die weisse Innenflaeche von "HP Leiste.png" (128x16) liegt bei x 4..123 und
+    // y 3..12. Als Anker-Brueche ausgedrueckt sitzt die Fuellung damit bei jeder
+    // Leistengroesse pixelgenau im Rahmen.
+    static readonly Vector2 InteriorAnchorMin = new Vector2(4f / 128f, 3f / 16f);
+    static readonly Vector2 InteriorAnchorMax = new Vector2(124f / 128f, 13f / 16f);
+
     [MenuItem("Tools/UI/Create HP Bar (Upper Left)")]
     static void CreateHealthBar()
     {
@@ -32,25 +41,35 @@ public static class HealthBarSetup
         rect.sizeDelta = new Vector2(BarWidth, BarHeight);
         rect.anchoredPosition = new Vector2(Margin, -Margin);
 
-        Image background = CreateStretchedChild(rect, "Background",
-            GetBuiltinSprite("UI/Skin/Background.psd"));
-        background.type = Image.Type.Sliced;
-        background.color = new Color(0.15f, 0.15f, 0.15f, 1f);
+        // Der Rahmen ist das Bild selbst, unveraendert und weiss getoent, damit es
+        // seine eigenen Farben zeigt. Simple statt Sliced: so wird die Grafik als
+        // Ganzes gestreckt und der Rand skaliert proportional mit.
+        Image background = CreateStretchedChild(rect, "Background", LoadFrameSprite());
+        background.type = Image.Type.Simple;
+        background.color = Color.white;
 
         RectTransform fillArea = new GameObject("Fill Area", typeof(RectTransform))
             .GetComponent<RectTransform>();
         fillArea.SetParent(rect, false);
-        Stretch(fillArea);
-        fillArea.offsetMin = new Vector2(2f, 2f);
-        fillArea.offsetMax = new Vector2(-2f, -2f);
+        fillArea.anchorMin = InteriorAnchorMin;
+        fillArea.anchorMax = InteriorAnchorMax;
+        fillArea.offsetMin = Vector2.zero;
+        fillArea.offsetMax = Vector2.zero;
 
-        Image fill = CreateStretchedChild(fillArea, "Fill",
-            GetBuiltinSprite("UI/Skin/UISprite.psd"));
-        fill.type = Image.Type.Sliced;
+        // Das Fuell-Sprite hat exakt die Form der weissen Innenflaeche, samt der
+        // abgeschraegten Enden. Filled/Horizontal deckt es von links auf, statt das
+        // Rect zu skalieren - so bleiben beide Enden formtreu.
+        Image fill = CreateStretchedChild(fillArea, "Fill", LoadFillSprite());
+        fill.type = Image.Type.Filled;
+        fill.fillMethod = Image.FillMethod.Horizontal;
+        fill.fillOrigin = (int)Image.OriginHorizontal.Left;
+        fill.fillAmount = 1f;
 
         Slider slider = sliderGo.GetComponent<Slider>();
         slider.transition = Selectable.Transition.None;
         slider.interactable = false;
+        // Der Slider erkennt ein Fill-Image im Filled-Modus und setzt dann dessen
+        // fillAmount, statt die Anker zu skalieren. Die Fuellung behaelt so ihre Form.
         slider.fillRect = fill.rectTransform;
         slider.targetGraphic = fill;
         slider.wholeNumbers = true;
@@ -129,9 +148,23 @@ public static class HealthBarSetup
         rect.offsetMax = Vector2.zero;
     }
 
-    static Sprite GetBuiltinSprite(string path)
+    static Sprite LoadFrameSprite()
     {
-        return AssetDatabase.GetBuiltinExtraResource<Sprite>(path);
+        return LoadSprite(FrameSpritePath);
+    }
+
+    static Sprite LoadFillSprite()
+    {
+        return LoadSprite(FillSpritePath);
+    }
+
+    static Sprite LoadSprite(string path)
+    {
+        Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+        if (sprite == null)
+            Debug.LogWarning($"HP-Leisten-Sprite nicht gefunden: {path}");
+
+        return sprite;
     }
 
     static Gradient BuildGradient()
