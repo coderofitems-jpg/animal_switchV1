@@ -260,7 +260,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 253
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -285,7 +285,7 @@ Transform:
   m_GameObject: {fileID: 1081885230}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 551, y: 254, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -398,7 +398,7 @@ RectTransform:
   m_GameObject: {fileID: 1190016408}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1318510465}
@@ -408,7 +408,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 20, y: -20}
-  m_SizeDelta: {x: 220, y: 26}
+  m_SizeDelta: {x: 270, y: 40}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1190016410
 MonoBehaviour:
@@ -789,6 +789,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   tier: 1
+  _rigidbody: {fileID: 0}
+  _jumpForce: 1
+  _gravityScale: 3
+  _groundCheckDistance: 0.1
 --- !u!212 &1621378813
 SpriteRenderer:
   serializedVersion: 2
@@ -857,8 +861,8 @@ Transform:
   m_GameObject: {fileID: 1621378811}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 550, y: 250, z: 0}
-  m_LocalScale: {x: 200, y: 200, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
