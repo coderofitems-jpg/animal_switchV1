@@ -11,12 +11,14 @@ public class PlayerHealthEditor : Editor
     SerializedProperty maxHealth;
     SerializedProperty healthBar;
     SerializedProperty currentHealth;
+    SerializedProperty onDeath;
 
     void OnEnable()
     {
         maxHealth = serializedObject.FindProperty("maxHealth");
         healthBar = serializedObject.FindProperty("healthBar");
         currentHealth = serializedObject.FindProperty("currentHealth");
+        onDeath = serializedObject.FindProperty("onDeath");
     }
 
     public override void OnInspectorGUI()
@@ -30,6 +32,8 @@ public class PlayerHealthEditor : Editor
         currentHealth.intValue = EditorGUILayout.IntSlider(
             "Current Health", currentHealth.intValue, 0, Mathf.Max(1, maxHealth.intValue));
 
+        EditorGUILayout.PropertyField(onDeath);
+
         // Applies the edit and fires OnValidate, which pushes the value to the bar.
         serializedObject.ApplyModifiedProperties();
 
@@ -40,6 +44,9 @@ public class PlayerHealthEditor : Editor
         using (new EditorGUI.DisabledScope(!Application.isPlaying))
         {
             EditorGUILayout.LabelField("Test Controls", EditorStyles.boldLabel);
+
+            if (Application.isPlaying && player.IsDead)
+                EditorGUILayout.LabelField("State", "Dead - damage is ignored");
 
             using (new EditorGUILayout.HorizontalScope())
             {
