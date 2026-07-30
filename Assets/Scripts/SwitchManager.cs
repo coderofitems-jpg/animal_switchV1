@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameManager : MonoBehaviour {
+public class SwitchManager : MonoBehaviour {
 
+    [Header("Switching")]
     [SerializeField] private InputAction _switchAction;
-    
     [SerializeField] private GameObject _squirrel;
     [SerializeField] private GameObject _bear;
 
