@@ -26,9 +26,9 @@ public class Enemy : MonoBehaviour
     //cd: abklingzeit für die Schläge eines Spielers
     
     static readonly TierStats[] tierTable = {
-        new TierStats(20,  5, 15f, 30f, 1f,   0f,  1.5f),
-        new TierStats(50, 13, 20f,   40f, 3f,   5f,  1f),
-        new TierStats(90, 20, 25f, 60f, 5f,  10f,  0.5f),
+        new TierStats(20,  5, 2f, 1f, 1f,   0f,  1.5f),
+        new TierStats(50, 13, 3f,   1.5f, 3f,   5f,  1f),
+        new TierStats(90, 20, 4f, 2f, 5f,  10f,  0.5f),
     };
 
     // Chasespeed 0 heißt dass der Gegner einen nicht verfolgen kann d.h. statisch ist.
