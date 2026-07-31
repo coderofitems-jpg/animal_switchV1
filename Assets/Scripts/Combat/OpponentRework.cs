@@ -22,6 +22,14 @@ public class OpponentRework : MonoBehaviour {
         float bearDistance = Vector3.Distance(transform.position, _bear.transform.position);
         float squirrelDistance = Vector3.Distance(transform.position, _squirrel.transform.position);
         
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        if (_bear.transform.position.x > transform.position.x) {
+            sprite.flipX = false;
+        }
+        else {
+            sprite.flipX = true;
+        }
+        
         if (squirrelDistance <= _range ||  bearDistance <= _range) {
             if (currentCooldown <= 0f) {
                 Attack();
