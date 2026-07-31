@@ -97,3 +97,13 @@ public class CombatManager : MonoBehaviour {
         _currentSpawnpoint = pos;
     }
 }
+
+// ============================================================================
+// --- Achtung beim Mergen ---
+// 1.  Branch enemy-rework ("Started Level Design") baut ein Tilemap-Level
+//     (Grid mit Background/Foreground + Assets/Tilemap/*, MapPalette.prefab)
+//     direkt in der GameScene, nicht in Level.unity. Diese GameScene-Version
+//     kennt Canvas/HealthBar/EventSystem noch nicht -> Merge-Konflikt.
+//     Vorher klaeren welche Level-Pipeline gilt: Tilemap oder die 456
+//     Einzelsprites in Level.unity.
+// ============================================================================
