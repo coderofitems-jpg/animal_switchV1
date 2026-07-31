@@ -13,9 +13,31 @@ public class OpponentRework : MonoBehaviour {
     
     private float currentCooldown;
     private float currentHp;
+    private EnemyHealthBar healthBar;
 
     public void OnEnable() {
         currentHp = _health;
+
+        // Baut sich selbst auf und bleibt bis zum ersten Treffer unsichtbar,
+        // dieselbe Leiste die auch Enemy benutzt.
+        if (healthBar == null) {
+            healthBar = GetComponent<EnemyHealthBar>();
+
+            if (healthBar == null) {
+                healthBar = gameObject.AddComponent<EnemyHealthBar>();
+            }
+        }
+
+        UpdateHealthBar();
+    }
+
+    private void UpdateHealthBar() {
+        if (healthBar == null) {
+            return;
+        }
+
+        // _health 0 waere sonst eine Division durch null und damit NaN.
+        healthBar.SetPercent(_health > 0f ? currentHp / _health : 0f);
     }
     
     public void Update() {
@@ -39,6 +61,12 @@ public class OpponentRework : MonoBehaviour {
     public void SubtractHp(float hp) {
         Debug.Log("Subtracting opponent hp: " + currentHp);
         currentHp -= hp;
+        if (currentHp < 0f) {
+            currentHp = 0f;
+        }
+
+        UpdateHealthBar();
+
         if (currentHp <= 0f) {
             Debug.Log("Opponent dead");
             gameObject.SetActive(false);

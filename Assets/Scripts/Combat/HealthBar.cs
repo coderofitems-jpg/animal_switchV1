@@ -1,57 +1,24 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Runs in edit mode too, so dragging the Slider's Value in the inspector
-// updates the fill colour without having to enter play mode.
-[ExecuteAlways]
 public class HealthBar : MonoBehaviour
 {
-    public Slider slider;
-    public Gradient gradient;
-    public Image fill;
+    [SerializeField] private Image fill;
+    [SerializeField] private Gradient gradient;
 
-    public void SetMaxHealth(int health)
+    public void SetHealth(float currentHealth, float maxHealth)
     {
-        if (slider == null)
+        if (fill == null)
             return;
 
-        slider.maxValue = health;
-        slider.value = health;
+        // maxHealth 0 waere sonst eine Division durch null und damit NaN.
+        float percent = maxHealth > 0f ? Mathf.Clamp01(currentHealth / maxHealth) : 0f;
 
-        ApplyGradient();
-    }
+        fill.fillAmount = percent;
 
-    public void SetHealth(int health)
-    {
-        if (slider == null)
-            return;
-
-        slider.value = health;
-
-        ApplyGradient();
-    }
-
-    void OnEnable()
-    {
-        ApplyGradient();
-    }
-
-    public void Update()
-    {
-        ApplyGradient();
-    }
-
-    // Null guards matter here: with [ExecuteAlways] this also runs in the editor,
-    // where the references can be unassigned while the bar is being set up.
-    //
-    // Nur die Farbe: den Fuellstand treibt der Slider selbst. Weil das Fill-Image
-    // auf Type.Filled steht, setzt Slider.UpdateVisuals dessen fillAmount statt die
-    // Anker zu skalieren - genau deshalb behalten die Enden ihre Form.
-    void ApplyGradient()
-    {
-        if (fill == null || slider == null || gradient == null)
-            return;
-
-        fill.color = gradient.Evaluate(slider.normalizedValue);
+        if (gradient != null)
+        {
+            fill.color = gradient.Evaluate(percent);
+        }
     }
 }

@@ -28,13 +28,13 @@ public static class HealthBarSetup
         Canvas canvas = GetOrCreateCanvas();
         EnsureEventSystem();
 
-        GameObject sliderGo = new GameObject("HealthBar", typeof(RectTransform), typeof(Slider));
-        Undo.RegisterCreatedObjectUndo(sliderGo, "Create HP Bar");
-        sliderGo.transform.SetParent(canvas.transform, false);
+        GameObject barGo = new GameObject("HealthBar", typeof(RectTransform));
+        Undo.RegisterCreatedObjectUndo(barGo, "Create HP Bar");
+        barGo.transform.SetParent(canvas.transform, false);
 
         // Top-left anchoring: anchor and pivot both in the upper-left corner, so the
         // bar keeps its offset from that corner at every resolution.
-        RectTransform rect = sliderGo.GetComponent<RectTransform>();
+        RectTransform rect = barGo.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0f, 1f);
         rect.anchorMax = new Vector2(0f, 1f);
         rect.pivot = new Vector2(0f, 1f);
@@ -58,41 +58,27 @@ public static class HealthBarSetup
 
         // Das Fuell-Sprite hat exakt die Form der weissen Innenflaeche, samt der
         // abgeschraegten Enden. Filled/Horizontal deckt es von links auf, statt das
-        // Rect zu skalieren - so bleiben beide Enden formtreu.
+        // Rect zu skalieren - so bleiben beide Enden formtreu. HealthBar setzt
+        // fillAmount direkt; ein Slider dazwischen wuerde den Wert ueberschreiben.
         Image fill = CreateStretchedChild(fillArea, "Fill", LoadFillSprite());
         fill.type = Image.Type.Filled;
         fill.fillMethod = Image.FillMethod.Horizontal;
         fill.fillOrigin = (int)Image.OriginHorizontal.Left;
         fill.fillAmount = 1f;
 
-        Slider slider = sliderGo.GetComponent<Slider>();
-        slider.transition = Selectable.Transition.None;
-        slider.interactable = false;
-        // Der Slider erkennt ein Fill-Image im Filled-Modus und setzt dann dessen
-        // fillAmount, statt die Anker zu skalieren. Die Fuellung behaelt so ihre Form.
-        slider.fillRect = fill.rectTransform;
-        slider.targetGraphic = fill;
-        slider.wholeNumbers = true;
-        slider.minValue = 0f;
-        slider.maxValue = 100f;
-        slider.value = 100f;
+        Gradient gradient = BuildGradient();
+        fill.color = gradient.Evaluate(1f);
 
-        HealthBar healthBar = sliderGo.AddComponent<HealthBar>();
-        healthBar.slider = slider;
-        healthBar.fill = fill;
-        healthBar.gradient = BuildGradient();
-        fill.color = healthBar.gradient.Evaluate(1f);
+        // fill und gradient sind [SerializeField] private, also ueber SerializedObject
+        // statt direkt zuweisen.
+        HealthBar healthBar = barGo.AddComponent<HealthBar>();
+        SerializedObject so = new SerializedObject(healthBar);
+        so.FindProperty("fill").objectReferenceValue = fill;
+        so.FindProperty("gradient").gradientValue = gradient;
+        so.ApplyModifiedPropertiesWithoutUndo();
 
-        // Attached to the bar itself so the health slider can be driven from the
-        // inspector without a player in the scene. Safe to remove once a real
-        // player object owns its own PlayerHealth.
-        PlayerHealth tester = sliderGo.AddComponent<PlayerHealth>();
-        tester.healthBar = healthBar;
-        tester.maxHealth = 100;
-        tester.currentHealth = 100;
-
-        Selection.activeGameObject = sliderGo;
-        EditorUtility.SetDirty(sliderGo);
+        Selection.activeGameObject = barGo;
+        EditorUtility.SetDirty(barGo);
     }
 
     static Canvas GetOrCreateCanvas()

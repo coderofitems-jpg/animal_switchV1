@@ -46,6 +46,9 @@ public class Enemy : MonoBehaviour
     SpriteRenderer sprite;
     EnemyHealthBar healthBar;
 
+    // Optional im Inspector setzbar; sonst wird er in Start in der Szene gesucht.
+    [SerializeField] CombatManager combatManager;
+
     // Fuer die Testbuttons im Inspector.
     public int CurrentHealth => health;
     public int MaxHealth => stats.maxHealth;
@@ -74,6 +77,9 @@ public class Enemy : MonoBehaviour
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
             player = playerObject.transform;
+
+        if (combatManager == null)
+            combatManager = FindFirstObjectByType<CombatManager>();
     }
 
     // Uebernimmt die Werte des eingestellten Tiers und setzt die HP auf voll.
@@ -150,12 +156,12 @@ public class Enemy : MonoBehaviour
         if (Time.time < nextHitTime) return;
         if (!other.gameObject.CompareTag("Player")) return;
 
-        PlayerHealth hp = other.gameObject.GetComponent<PlayerHealth>();
-        if (hp != null)
-        {
-            hp.TakeDamage(stats.contactDamage);
-            nextHitTime = Time.time + stats.damageCooldown;
-        }
+        // Die Spieler-HP liegen zentral im CombatManager, nicht auf dem Spielerobjekt:
+        // beide Tierformen teilen sich denselben Lebensbalken.
+        if (combatManager == null) return;
+
+        combatManager.SubtractHp(stats.contactDamage);
+        nextHitTime = Time.time + stats.damageCooldown;
     }
 
     // Spieler Angriff damage
