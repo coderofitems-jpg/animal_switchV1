@@ -544,6 +544,7 @@ GameObject:
   - component: {fileID: 145320612}
   - component: {fileID: 145320611}
   - component: {fileID: 145320616}
+  - component: {fileID: 145320617}
   m_Layer: 0
   m_Name: Squirrel
   m_TagString: Untagged
@@ -558,7 +559,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145320610}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e084170bf2028cc448bb50e5992ecacf, type: 3}
   m_Name: 
@@ -616,6 +617,8 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
   _jumpForce: 8
+  _bearWalking: {fileID: 0}
+  _bearStanding: {fileID: 0}
 --- !u!50 &145320612
 Rigidbody2D:
   serializedVersion: 5
@@ -757,7 +760,7 @@ Transform:
   m_GameObject: {fileID: 145320610}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.693, y: 0.327, z: 0}
+  m_LocalPosition: {x: -14.63, y: 0.327, z: 0}
   m_LocalScale: {x: 4.5, y: 4.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -776,6 +779,73 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EatScript
   _combatManager: {fileID: 594880306}
+--- !u!114 &145320617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145320610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a50ef8916a484c428e5adace61cac96d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SquirrelMovement
+  _rigidbody: {fileID: 145320612}
+  _moveAction:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: bfe1d807-a73f-412e-b071-bcba42dd5b6a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 1D Axis
+      m_Id: 9c09617d-8287-40ea-820b-8cd4d3b0c14e
+      m_Path: 1DAxis
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 4
+    - m_Name: negative
+      m_Id: 3f758842-073d-43b1-945a-1fc68da3bc9b
+      m_Path: <Keyboard>/a
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 8
+    - m_Name: positive
+      m_Id: 848649ce-e400-4e6a-b79a-e57f7c12b313
+      m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 8
+    m_Flags: 0
+  _movementSpeed: 15
+  _jumpAction:
+    m_Name: Jump
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 46098d68-d7c2-4c50-8fa2-1b93a00d1a97
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 0e031aa7-0908-4476-bec5-1e4ee5bc288d
+      m_Path: <Keyboard>/space
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Jump
+      m_Flags: 0
+    m_Flags: 0
+  _jumpForce: 8
+  _flying: {fileID: 1305224988137502496, guid: f4e4625aa4286df48b1ed35fb0013774, type: 3}
+  _normal: {fileID: -8766335667669091169, guid: 2b6f49c967b6bd845822106725e361dc, type: 3}
 --- !u!1 &406738970
 GameObject:
   m_ObjectHideFlags: 0
@@ -33112,6 +33182,8 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
   _jumpForce: 30
+  _bearWalking: {fileID: -1957739459252166594, guid: 50d8582544455704d92ccbe714c6b977, type: 3}
+  _bearStanding: {fileID: -4262525060322793345, guid: e40fe287afa527e46a7cf7ce802364b7, type: 3}
 --- !u!212 &811026397
 SpriteRenderer:
   serializedVersion: 2
@@ -33221,6 +33293,7 @@ MonoBehaviour:
   _opponents:
   - {fileID: 1765281991}
   - {fileID: 957207954}
+  - {fileID: 136798517}
 --- !u!114 &811026400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33677,7 +33750,7 @@ Transform:
   m_GameObject: {fileID: 1218520147}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 199.51, y: 3.713, z: 0}
+  m_LocalPosition: {x: 199.51, y: 3.649, z: 0}
   m_LocalScale: {x: 14, y: 14, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

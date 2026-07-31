@@ -13,6 +13,11 @@ public class BearMovement : MonoBehaviour {
     [Header("Jump")] 
     [SerializeField] private InputAction _jumpAction;
     [SerializeField] private float _jumpForce = 1f;
+    
+    [Header("Textures")] 
+    [SerializeField] private Sprite _bearWalking;
+    [SerializeField] private Sprite _bearStanding;
+    
     private bool isGrounded;
 
     private void OnEnable() {
@@ -25,18 +30,6 @@ public class BearMovement : MonoBehaviour {
         if (!IsGrounded()) return;
         _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode2D.Impulse);
     }
-
-    /*public void OnTriggerEnter2D(Collider2D collider2D) {
-        if (collider2D.CompareTag("Ground")) {
-            isGrounded = true;
-        }
-    }
-    
-    public void OnTriggerExit2D(Collider2D collider2D) {
-        if (collider2D.CompareTag("Ground")) {
-            isGrounded = false;
-        }
-    }*/
 
     private bool IsGrounded() {
         return _rigidbody.linearVelocityY == 0f;
@@ -54,16 +47,19 @@ public class BearMovement : MonoBehaviour {
     }
     
     public void Move(float  moveDirection) {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = _bearStanding;
         if (moveDirection == 0f) return;
         
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         if (moveDirection > 0f) {
             spriteRenderer.flipX = true;
         }
         else {
             spriteRenderer.flipX = false;
         }
+        
         float xMovement = moveDirection * Time.deltaTime * _movementSpeed;
         transform.Translate(new  Vector3(xMovement, 0f, 0f));
+        spriteRenderer.sprite = _bearWalking;
     }
 }
