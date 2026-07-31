@@ -22,11 +22,11 @@ public class BearMovement : MonoBehaviour {
     }
 
     private void Jump(InputAction.CallbackContext obj) {
-        if (!isGrounded) return;
+        if (!IsGrounded()) return;
         _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode2D.Impulse);
     }
 
-    public void OnTriggerEnter2D(Collider2D collider2D) {
+    /*public void OnTriggerEnter2D(Collider2D collider2D) {
         if (collider2D.CompareTag("Ground")) {
             isGrounded = true;
         }
@@ -36,6 +36,10 @@ public class BearMovement : MonoBehaviour {
         if (collider2D.CompareTag("Ground")) {
             isGrounded = false;
         }
+    }*/
+
+    private bool IsGrounded() {
+        return _rigidbody.linearVelocityY == 0f;
     }
     
     private void OnDisable() {
@@ -50,6 +54,15 @@ public class BearMovement : MonoBehaviour {
     }
     
     public void Move(float  moveDirection) {
+        if (moveDirection == 0f) return;
+        
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        if (moveDirection > 0f) {
+            spriteRenderer.flipX = true;
+        }
+        else {
+            spriteRenderer.flipX = false;
+        }
         float xMovement = moveDirection * Time.deltaTime * _movementSpeed;
         transform.Translate(new  Vector3(xMovement, 0f, 0f));
     }
