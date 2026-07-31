@@ -16,6 +16,7 @@ public class BearAttack : MonoBehaviour {
     
     private void OnEnable() {
         // Register Input
+        _attackAction.AddBinding("<Mouse>/leftButton");
         _attackAction.performed += Attack;
         _attackAction.Enable();
     }
